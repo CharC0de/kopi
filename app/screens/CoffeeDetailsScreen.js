@@ -20,16 +20,14 @@ const { height, width } = Dimensions.get("window");
 const size = ["Tall", "Grande", "Venti"];
 
 const CoffeeDetailsScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const route = useRoute();
   const { coffee } = route.params;
   const [activeSize, setActiveSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
   return (
     <>
-      <ScrollView
-        style={{ backgroundColor: colors.dark, flex: 1, paddingTop: 55 }}
-      >
+      <ScrollView style={{ backgroundColor: colors.dark, flex: 1 }}>
         <SafeAreaView>
           <ImageBackground
             style={{
@@ -49,9 +47,9 @@ const CoffeeDetailsScreen = () => {
               }}
             >
               <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Main");
-              }}
+                onPress={() => {
+                  navigation.navigate("Main");
+                }}
                 style={{
                   backgroundColor: colors.dark,
                   padding: SPACING,
@@ -195,7 +193,7 @@ const CoffeeDetailsScreen = () => {
                 {size.map((size, index) => (
                   <View key={index}>
                     <TouchableOpacity
-                      onPress={() => setActiveSize(size)}  
+                      onPress={() => setActiveSize(size)}
                       style={[
                         {
                           paddingVertical: SPACING / 2,
@@ -319,9 +317,9 @@ const CoffeeDetailsScreen = () => {
           </View>
           <View>
             <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Cart", {coffee, quantity,})
-            }}
+              onPress={() => {
+                navigation.navigate("Main", { coffee, quantity });
+              }}
               style={{
                 padding: SPACING + 5,
                 backgroundColor: colors.primary,

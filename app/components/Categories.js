@@ -27,30 +27,32 @@ const Categories = ({ onChange }) => {
       keyExtractor={(item) => item.id}
       contentContainerStyle={{ marginVertical: SPACING }}
       renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => handlePress(item.id)}
-          style={{ marginRight: SPACING * 2, alignItems: "center" }}
-        >
-          <Text
-            style={[
-              { color: colors.secondary, fontSize: SPACING * 2 },
-              activeCategoryId === item.id && { color: colors.primary },
-            ]}
+        <View>
+          <TouchableOpacity
+            onPress={() => handlePress(item.id)}
+            style={{ marginRight: SPACING * 2, alignItems: "center" }}
           >
-            {item.name}
-          </Text>
-          {activeCategoryId === item.id && (
-            <View
-              style={{
-                height: SPACING,
-                width: SPACING,
-                backgroundColor: colors.primary,
-                borderRadius: SPACING / 2,
-                marginTop: SPACING / 2,
-              }}
-            />
-          )}
-        </TouchableOpacity>
+            <Text
+              style={[
+                { color: colors.secondary, fontSize: SPACING * 2 },
+                activeCategoryId === item.id && { color: colors.primary },
+              ]}
+            >
+              {item.name}
+            </Text>
+            {activeCategoryId === item.id && (
+              <View
+                style={{
+                  height: SPACING,
+                  width: SPACING,
+                  backgroundColor: colors.primary,
+                  borderRadius: SPACING / 2,
+                  marginTop: SPACING / 2,
+                }}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
       )}
     />
   );
