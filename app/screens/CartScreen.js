@@ -1,18 +1,20 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SPACING from "../config/SPACING";
 import colors from "../config/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
+import cart from "../config/cart";
 
 const CartScreen = () => {
+  const [currCart, setCart] = useState([]);
   const navigation = useNavigation();
   // const { coffee, quantity } = route.params;
   // const [selectedQuantity, setSelectedQuantity] = useState(quantity);
   const [selectedMode, setSelectedMode] = useState(null);
-
+  useEffect(() => setCart(cart.details));
   return (
     <>
       <View
@@ -69,101 +71,142 @@ const CartScreen = () => {
               My Cart
             </Text>
           </View>
+          {currCart.length > 0 ? (
+            currCart.map((char) => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginVertical: 10,
+                }}
+              >
+                <View>
+                  {
+                    <Image
+                      style={{ height: 100, width: 100, borderRadius: SPACING }}
+                      source={char[0].image}
+                    />
+                  }
+                </View>
+                <View style={{ justifyContent: "space-evenly" }}>
+                  <Text
+                    style={{
+                      color: colors["white-smoke"],
+                      fontWeight: "bold",
+                      fontSize: SPACING * 2.3,
+                      right: 40,
+                    }}
+                  >
+                    {char[0].name}
+                  </Text>
+                  <Text
+                    style={{
+                      color: colors.light,
+                      fontSize: (SPACING / 2) * 3,
+                      right: 40,
+                      bottom: 1,
+                    }}
+                  >
+                    ${char[0].price}
+                  </Text>
+                </View>
+                <View style={{ justifyContent: "space-between" }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      cart.details = cart.details.map((item) => {
+                        item[2] =
+                          item[0].name == char[0].name ? item[2] + 1 : item[2];
+                        return item;
+                      });
+                      setCart(cart.details);
+                    }}
+                    style={{
+                      backgroundColor: colors.primary,
+                      borderRadius: 100,
+                      height: 30,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: colors.white,
+                        fontSize: SPACING * 2,
+                        fontWeight: "700",
+                        alignSelf: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      +
+                    </Text>
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: colors.white,
+                      fontSize: SPACING * 2,
+                      fontWeight: "700",
+                      marginHorizontal: SPACING,
+                      textShadowOffset: { width: 1, height: 2 },
+                      textShadowColor: colors["white-smoke"],
+                      textShadowRadius: 5,
+                    }}
+                  >
+                    {char[2]}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      toDelete = false;
+                      index = 0;
+                      cart.details = cart.details.map((item, i) => {
+                        item[2] =
+                          item[0].name == char[0].name
+                            ? Math.max(0, item[2] - 1)
+                            : item[2];
 
-          {/* quantity */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginVertical: 10,
-            }}
-          >
-            <View>
-              {/* <Image
-                style={{ height: 100, width: 100, borderRadius: SPACING }}
-                source={coffee.image}
-              /> */}
-            </View>
-            <View style={{ justifyContent: "space-evenly" }}>
-              <Text
-                style={{
-                  color: colors["white-smoke"],
-                  fontWeight: "bold",
-                  fontSize: SPACING * 2.3,
-                  right: 40,
-                }}
-              >
-                {/* {coffee.name} */}
-                kopi
-              </Text>
-              <Text
-                style={{
-                  color: colors.light,
-                  fontSize: (SPACING / 2) * 3,
-                  right: 40,
-                  bottom: 1,
-                }}
-              >
-                {/* ${coffee.price} */}
-                $kopi
-              </Text>
-            </View>
-            <View style={{ justifyContent: "space-between" }}>
-              <TouchableOpacity
-                // onPress={() => setQuantity(Math.max(1, quantity - 1))}
-                style={{
-                  backgroundColor: colors.primary,
-                  borderRadius: 100,
-                  height: 30,
-                }}
-              >
-                <Text
-                  style={{
-                    color: colors.white,
-                    fontSize: SPACING * 2,
-                    fontWeight: "700",
-                    alignSelf: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  +
-                </Text>
-              </TouchableOpacity>
-              <Text
-                style={{
-                  color: colors.white,
-                  fontSize: SPACING * 2,
-                  fontWeight: "700",
-                  marginHorizontal: SPACING,
-                  textShadowOffset: { width: 1, height: 2 },
-                  textShadowColor: colors["white-smoke"],
-                  textShadowRadius: 5,
-                }}
-              >
-                {/* {quantity} */}c
-              </Text>
-              <TouchableOpacity
-                // onPress={() => setQuantity((c) => c + 1)}
-                style={{
-                  backgroundColor: colors.primary,
-                  borderRadius: 100,
-                  height: 30,
-                }}
-              >
-                <Text
-                  style={{
-                    color: colors.white,
-                    fontSize: SPACING * 2,
-                    fontWeight: "700",
-                    alignSelf: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  -
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+                        if (item[2] == 0) {
+                          toDelete = true;
+                          index = i;
+                        }
+
+                        return item;
+                      });
+                      console.log(toDelete);
+                      toDelete ? cart.details.splice(index, 1) : null;
+                      setCart(cart.details);
+                    }}
+                    style={{
+                      backgroundColor: colors.primary,
+                      borderRadius: 100,
+                      height: 30,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: colors.white,
+                        fontSize: SPACING * 2,
+                        fontWeight: "700",
+                        alignSelf: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      -
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))
+          ) : (
+            <Text
+              style={{
+                color: colors.white,
+                justifyContent: "center",
+                alignSelf: "center",
+                fontSize: SPACING * 1.5,
+                fontWeight: "700",
+                marginLeft: SPACING,
+              }}
+            >
+              No items added yet
+            </Text>
+          )}
 
           {/* Mode */}
           <View

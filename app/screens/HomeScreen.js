@@ -18,12 +18,25 @@ import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
+import cart from "../config/cart";
 
 const { width } = Dimensions.get("window");
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [activeCategoryId, setActiveCategoryId] = useState(null);
+  const addToCart = (item, activeSize, quantity) => {
+    hasDupes = false;
+    cart.details.map((coffee) => {
+      if (coffee[0].name == item.name) {
+        coffee[2] += quantity;
+        hasDupes = true;
+        console.log(hasDupes);
+      }
+    });
+    hasDupes ? null : cart.details.push([item, activeSize, quantity]);
+    console.log(cart);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.dark }}>
@@ -226,6 +239,9 @@ const HomeScreen = () => {
                       </Text>
                     </View>
                     <TouchableOpacity
+                      onPress={() => {
+                        addToCart(coffee, "Tall", 1);
+                      }}
                       style={{
                         backgroundColor: colors.primary,
                         padding: SPACING / 2,

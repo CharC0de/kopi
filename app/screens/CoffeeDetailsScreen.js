@@ -9,8 +9,9 @@ import {
   Dimensions,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import colors from "../config/colors";
+import cart from "../config/cart";
 import SPACING from "../config/SPACING";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,11 +21,26 @@ const { height, width } = Dimensions.get("window");
 const size = ["Tall", "Grande", "Venti"];
 
 const CoffeeDetailsScreen = () => {
+  useEffect(() => {
+    setActiveSize(size[0]);
+    console.log(cart);
+  });
   const navigation = useNavigation();
   const route = useRoute();
   const { coffee } = route.params;
   const [activeSize, setActiveSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const addToCart = (item, activeSize, quantity) => {
+    hasDupes = false;
+    cart.details.map((coffee) => {
+      if (coffee[0].name == item.name) {
+        coffee[2] += quantity;
+        hasDupes = true;
+        console.log(hasDupes);
+      }
+    });
+    hasDupes ? null : cart.details.push([item, activeSize, quantity]);
+  };
   return (
     <>
       <ScrollView style={{ backgroundColor: colors.dark, flex: 1 }}>
@@ -318,7 +334,9 @@ const CoffeeDetailsScreen = () => {
           <View>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("Main", { coffee, quantity });
+                //navigation.navigate("Main", { coffee, quantity });
+                addToCart(coffee, activeSize, quantity);
+                console.log(cart);
               }}
               style={{
                 padding: SPACING + 5,
